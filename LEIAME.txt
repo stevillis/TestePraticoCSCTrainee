@@ -1,0 +1,75 @@
+Os diretórios estão nomeados de acordo com a numeração de cada Desafio apresentado no
+Teste Prático.
+
+Nos primeiros 3 Desafios escolhi desenvolvê-los utilizando a Linguagem Python. As 
+explicações de cada tema estão em comentários dentro dos arquivos main.py correspondentes 
+a cada Desafio.
+
+No Desafio 4 criei um Arquivo HTML que contém os comentários sobre cada Tag utilizada.
+
+Já no Desafio 5, escolhi consumir a API da Marvel e mostrar alguns atributos dos Personagens,
+como Foto, Nome, Descrição e Data da Última Atualização do Personagem.
+Inicialmente tive que ler a Documentação da API para entender como poderia extrair estes
+dados utilizando o Postman. Foi necessário criar uma conta no site da API e configurar
+uma Requisição utilizando as Chaves Pública e Privada disponibilizadas no cadastro. Após 
+conseguir acessar o Endpoint, fui para a Implementação com JavaScript.
+
+O projeto é composto pelos arquivos de configuração para Transpilação do JavaScript
+ES6 para versões mais antigas de browser que podem não ser compatíveis com esta sintaxe,
+também estão as imagens com prints da aplicação desenvolvida no diretório imagens.
+O Código fonte da aplicação encontra-se no diretório src e é composto pelos arquivos:
+
+* index.html
+É o arquivo que exibe o Documento HTML. Sua estrutura é composta por um Título "Personagens
+da Marvel", uma Mensagem com a descrição "Carregando..." quando os dados da Página estão 
+sendo carregados, por uma Lista de Personagens obtidos da API da Marvel e um Rodapé que exibe
+a fonte dos Dados apresentados.
+
+* app.js 
+Arquivo responsável por gerenciar o comportamento da página. 
+O comportamento de Exibir a Mensagem "Carregando..." logo abaixo do título da Página 
+quando a página é atualizada e os dados da API ainda não foram obtidos, devido a 
+Assincronicidade da Comunicação, é tratado neste arquivo.
+
+Aqui também é tratado o evento de Digitação no Campo "Buscar Personagem" utilizado para 
+buscar um Personagem, onde a cada Evento de "Soltar a Tecla" faz com que a Lista de 
+Personagens seja atualizada, mostrando somente os Personagens cujo nome corresponde com 
+parte do que foi digitado no Campo de Texto.
+
+É através deste arquivo que o Rodapé da Página tem sua Descrição Atualizada quando os Dados
+requisitados da API são obtidos.
+
+O fluxo de execução deste arquivo se dá da seguinte forma:
+Quando a página é carregada, o método setList() é chamado. Nele, a mensagem "Carregando..."
+é exibida abaixo do Título da Página. Através da chamada do método listAll, presente no
+arquivo marvelAPI.js, é feita uma Requisição à API para trazer todos os Personagens.
+Quando esta lista é disponibilizada, é feito uma filtragem pelo Nome de cada Personagem
+para que somente os que correspondem ao nome digitado na Caixa de Texto sejam apresentados.
+O método createList, do arquivo listService.js, é chamado em seguida, recebendo a Lista
+de Personagens filtrados e devolvendo o código HTML com os dados de cada Personagem.
+Por fim, a mensagem "Carregando..." é apagada e este fluxo se repete toda vez que o
+usuário realizar um Evento de Teclado no campo "Buscar Personagem".
+
+* listService.js
+A única responsabilidade deste arquivo é receber uma Lista de Personagens e devolver um
+código HTML formatado com os dados destes Personagens. Onde para cada Personagem da Lista
+é criado um "Card" do Bootstrap que apresenta a Foto do Personagem, Nome, Descrição e 
+Data da Última Atualização do Personagem.
+
+* marvelAPI.js
+Arquivo responsável por fazer a Requisição à API de Personagens da Marvel, através de um 
+Método HTTP GET. Por ser uma Comunicação Assíncrona, foi necessário utilizar o conceito de
+Promises, que permite que outras ações na página ocorram enquanto há uma espera pela 
+Respost do Servidor, não travando a página.
+Como o retorno da API é uma String, foi necessário converter esta resposta no formato JSON,
+para que fosse possível percorrer a Lista de Personagens e obter seus dados. Como regra, 
+defini que quando uma Descrição de um Personagem contiver mais de 60 caracteres, os 
+excedentes serão suprimidos com "...", evitando assim a quebra do Layout dos "Cards" que 
+apresentam os Personagens.
+Aqui também é feita uma conversão de Data para exibir a Data da Última Atualização do 
+Personagem no formato dd/mm/YYYY.
+Também é feito um trabamento nos dados de caminho e extensão da Imagem do Personagem, visto 
+que a API fornece estes dados de forma separada e os concatenei para que fossem utilizados
+na renderização da Imagem, tendo o formato url_da_imagem.extensao_da_imagem.
+Após montar os dados de cada Personagem em um Objeto, uma lista com estes Objetos é criada
+e retornada para o Arquivo app.js.
